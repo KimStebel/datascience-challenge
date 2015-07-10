@@ -1,48 +1,25 @@
-# Sample Spark project
+# Fare Gap
 
 ## Highlights
 
-- Sane compiler flags to scala
-- `sbt console` starts a Spark and SparkSQL context
-- Advanced static analyzer reports possible bugs and bad coding practices
+- Analyze NYC taxi data to see how long it takes to get a fare after a dropoff
 
-## Libraries included
+## Spark
 
-- Spark 1.3.0
-- Scala 2.11.6
-- ScalaTest 2.2.4
-- ScalaCheck 1.12.2
+- Apache Spark (using Scala) for processing the data
+- Import csv, parse each trip into an instance of a class
+- Filter ridiculous coordinates out (GPS errors? Data corruption?) & limit to a Manhattan box
+- Ordered data by car and then pickup time
+- Calculate the time between the dropoff and the next pickup
+- Divide the box into a 100x100 grid and group the trips into the boxes
+- Average the wait time for each box
+- Output the data as a series of GeoJSON objects
 
-## Static Analyzer
+## Leaflet
 
-### linter (https://github.com/HairyFotr/linter)
-
-Usage: automatically runs during Compilation and evaluation in console
-
-### sbt-scapegoat (https://github.com/sksamuel/sbt-scapegoat)
-
-Usage: automatically runs during Compilation
-
-Open target/scala-2.11/scapegoat.xml or target/scala-2.11/scapegoat.html
-
-## Coding Style Checker
-
-### ScalaStyle
-
-Usage: ```sbt scalastyle```
-
-Open target/scalastyle-result.xml
-
-Check level are all "warn", change to "error" if you want to reject code changes when integrated with CI tools.
-
-## Issues
-
-### fork limitation in sbt console
-
-Currently Test and run will fork a JVM. The reason it's necessary is that SBT's classloader doesn't work well with Spark and Spark shell.
-
-However `sbt console` does not recognize fork key right now. It might throw ScalaReflectionException, etc.
-
-## Author
-
-- Jianshi Huang (jianshuang@paypal.com; jianshi.huang@gmail.com)
+- Leaflet (javascript library) for displaying the output on a map
+- Based on the tutorial http://leafletjs.com/examples/choropleth.html
+- Display a map centered on Manhattan, using OpenStreetMap tiles
+- Add a color scheme and legend
+- Load the GeoJSON data from the file output by Spark
+- Apply the correct colour style to each GeoJSON object based on the wait times
